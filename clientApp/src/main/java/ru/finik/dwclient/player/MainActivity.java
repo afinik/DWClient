@@ -1,3 +1,5 @@
+/*version c0.001*/
+
 package ru.finik.dwclient.player;
 
 import android.app.Activity;
