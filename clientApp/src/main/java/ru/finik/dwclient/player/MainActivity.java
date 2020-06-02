@@ -63,6 +63,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     int deltaTime;
     int MAXNUMOFITERATION = 1;
     int currentNumberOfIteration;
+    double VERSION = 0.002;
 
 
     private final static String FILE_NAME = "content.txt";
@@ -80,6 +81,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
 //        intent = new Intent(MainActivity.this, ServerConnectionActivity.class);
 //        startActivity(intent);
         //выбираем папку
+        writeAndReadServer("vers." + "/" + VERSION);
         //TODO реализовать сервис для приложения - сапуск из пуш уведомлений
         clientId = UUID.randomUUID().toString();
         someTextMemo = findViewById(R.id.someTextTV);
@@ -224,6 +226,10 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
                         }
                         break;
                     case "vers":
+                        s = strFromServer.substring(strFromServer.lastIndexOf("/") + 1);
+                        if (s.equals("old")){
+                            Log.e("VERSION", "Version is too old");
+                        }
                         break;
                     /*case "num":
                         break;
