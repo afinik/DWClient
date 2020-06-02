@@ -150,22 +150,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/setbut1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:onClick="onClickSetBtn1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/setbut2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:onClick="onClickSetBtn2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
         android:id="@+id/lastMessageTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

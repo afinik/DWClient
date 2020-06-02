@@ -81,16 +81,6 @@ public class ServerConnectionActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Data sent and receive", Toast.LENGTH_LONG).show();
                 break;
 
-            case R.id.btnSend:
-               // mainActivity.writeToServer(textToSend.getText().toString());
-                Toast.makeText(getApplicationContext(), "Data sent", Toast.LENGTH_LONG).show();
-                break;
-
-            case R.id.btnReceive:
-                mainActivity.readFromServer();
-                Toast.makeText(getApplicationContext(), "Data receive", Toast.LENGTH_LONG).show();
-                break;
-
         }
     }
 
