@@ -1,5 +1,3 @@
-/*version c0.001*/
-
 package ru.finik.dwclient.player;
 
 import android.app.Activity;
@@ -63,11 +61,8 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     int deltaTime;
     int MAXNUMOFITERATION = 1;
     int currentNumberOfIteration;
-    double VERSION = 0.002;
-
-
-    private final static String FILE_NAME = "content.txt";
-
+    double VERSION = 0.003;
+    public static Uri myUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +101,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder binder) {
+                Log.e("Сервис", "1");
                 myService = ((MyService.MyBinder) binder).service;
                 progressBar.setEnabled(true);
                 progressBar.setProgress((int) (myService.getProgress() * 100));
@@ -257,7 +253,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
                 progressBar.setVisibility(View.VISIBLE);
 
 
-                Uri myUri = data.getData();
+                myUri = data.getData();
                 mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -290,17 +286,19 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
         i = new Intent(Intent.ACTION_GET_CONTENT);
         i.setType("audio/*");
         startActivityForResult(Intent.createChooser(i, getString(R.string.select_audio_file_title)), REQUESTCODE);
+        if(myService!=null) {
+            myService.play();
+/*            try {
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+            //send "Start ... " to server for play music on the client (seekto)
+        }
     }
 
     public void onClickPlayBtn(View view) {
-//        if(myService!=null || true){
-//                    myService.play();
-//                    try {
-//                        mediaPlayer.prepare();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-        //send "Start ... " to server for play music on the client (seekto)
+
 
         startTime = System.currentTimeMillis();
         currentNumberOfIteration = MAXNUMOFITERATION;
@@ -364,7 +362,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
 
                     }
                 } catch (IOException e) {
-                    Log.e("ошибка", "не подсоединилось - M259");
+                    Log.e("ошибка", "не подсоединилось - M367");
                     e.printStackTrace();
                 }
             }

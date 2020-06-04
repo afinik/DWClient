@@ -7,14 +7,18 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import java.sql.NClob;
+
+import ru.finik.dwclient.R;
+
 public class MyService extends Service {
     public MyService() {
     }
-
     public static final int NOTIFY_ID = 124;
     public static final String ACTION_PAUSE = "ru.finik.StayNotSoClose.ACTION_PAUSE";
     public static final String ACTION_PLAY = "ru.finik.StayNotSoClose.ACTION_PLAY";
@@ -22,24 +26,22 @@ public class MyService extends Service {
     NotificationCompat.Builder mBuilder;
 
     MediaPlayer mediaPlayer;
-
     @Override
     public void onCreate() {
         super.onCreate();
         mManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        mediaPlayer = MediaPlayer.create(this, R.raw.dontstay);
-        mediaPlayer.setVolume(0.5f, 0.5f);
+        mediaPlayer = MediaPlayer.create(this, MainActivity.myUri);
+        mediaPlayer.setVolume(0.5f,0.5f);
         mediaPlayer.setLooping(true);
     }
-
-    private void createNotify() {
-        Intent activityIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntentLaunch = PendingIntent.getActivity(this, 0,
-                activityIntent, 0);
-        PendingIntent pendingIntentPause = PendingIntent.getService(this, 0,
-                new Intent(this, MyService.class).setAction(ACTION_PAUSE), 0);
-        PendingIntent pendingIntentPlay = PendingIntent.getService(this, 0,
-                new Intent(this, MyService.class).setAction(ACTION_PLAY), 0);
+    private void createNotify(){
+        Intent actiivityIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntentLaunch = PendingIntent.getActivity(this,0,
+                actiivityIntent, 0);
+        PendingIntent pendingIntentPause = PendingIntent.getService(this,0,
+                new Intent(this,MyService.class).setAction(ACTION_PAUSE),0);
+        PendingIntent pendingIntentPlay = PendingIntent.getService(this,0,
+                new Intent(this,MyService.class).setAction(ACTION_PLAY),0);
         NotificationCompat.Action actionPause = new NotificationCompat.Action(android.R.drawable.ic_media_pause, "PAUSE", pendingIntentPause);
         NotificationCompat.Action actionPlay = new NotificationCompat.Action(android.R.drawable.ic_media_play, "PLAY", pendingIntentPlay);
 //
@@ -56,21 +58,19 @@ public class MyService extends Service {
 //        updateNotify(pause());
 
     }
-
-    private void updateNotify(boolean isPaused) {
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0,
-                new Intent(this, MyService.class).setAction(ACTION_PAUSE), 0);
+    private void updateNotify(boolean isPaused){
+        PendingIntent pendingIntent = PendingIntent.getService(this,0,
+                new Intent(this,MyService.class).setAction(ACTION_PAUSE),0);
         NotificationCompat.Action actionPause = new NotificationCompat.Action(android.R.drawable.ic_media_pause, "PLAY/PAUSE", pendingIntent);
 //        mBuilder.mActions.get()
     }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (ACTION_PAUSE.equals(intent.getAction())) {
+        if (ACTION_PAUSE.equals(intent.getAction())){
             pause();
         } else if (ACTION_PLAY.equals(intent.getAction())) {
             play();
-        } else {
+        }else {
             mediaPlayer.start();
             createNotify();
             Log.e("tag", "ntcnefefewfew");
@@ -86,29 +86,26 @@ public class MyService extends Service {
         super.onDestroy();
     }
 
-    public void pause() {
+    public void pause(){
         mediaPlayer.pause();
     }
-
-    public void play() {
+    public void play(){
 
         mediaPlayer.start();
     }
 
-    public float getProgress() {
+    public float getProgress(){
         return mediaPlayer.getCurrentPosition() / (float) mediaPlayer.getDuration();
     }
-
     @Override
     public IBinder onBind(Intent intent) {
         mediaPlayer.start();
         return new MyBinder(this);
     }
 
-    static class MyBinder extends Binder {
+    static class  MyBinder extends Binder {
         public MyService service;
-
-        public MyBinder(MyService service) {
+        public MyBinder(MyService service){
             this.service = service;
         }
     }
