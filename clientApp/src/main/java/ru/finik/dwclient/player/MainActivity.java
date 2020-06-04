@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     int deltaTime;
     int MAXNUMOFITERATION = 1;
     int currentNumberOfIteration;
-    double VERSION = 0.003;
+    double VERSION = 0.004;
     public static Uri myUri;
 
     @Override
