@@ -2,8 +2,10 @@ package ru.finik.dwclient.player;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -39,9 +41,11 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     public static final String CHANNEL_ID = "";
     private static final String TAG = "Тестовое логирование: ";
     private int duration;
+    private int timeToEnd;
     ServiceConnection serviceConnection;
     MyService myService;
     public Handler handler;
+    TextView versionTextMemo;
     TextView someTextMemo;
     Button playButton;
     Button pauseButton;
@@ -50,6 +54,8 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     Intent i;
     private MediaPlayer mediaPlayer;
     final int REQUESTCODE = 43544;
+//    private final String IP = "18.218.155.22";
+//    private final String IP = "ec2-18-188-13-12.us-east-2.compute.amazonaws.com";
     private final String IP = "192.168.0.165";
     private final int PORT = 8189;
     boolean wasOnPrepare = false;
@@ -61,8 +67,9 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     int deltaTime;
     int MAXNUMOFITERATION = 1;
     int currentNumberOfIteration;
-    double VERSION = 0.004;
+    double VERSION = 0.006;
     public static Uri myUri;
+    public final String HCODE_MAP_KEY = "App_hash";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +84,10 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
 //        startActivity(intent);
         //выбираем папку
         writeAndReadServer("vers." + "/" + VERSION);
-        //TODO реализовать сервис для приложения - сапуск из пуш уведомлений
+        //TODO реализовать сервис для приложения - запуск из пуш уведомлений
         clientId = UUID.randomUUID().toString();
+        versionTextMemo = findViewById(R.id.versionTV);
+        versionTextMemo.setText("vers. " + VERSION);
         someTextMemo = findViewById(R.id.someTextTV);
         someTextMemo.setText("");
         playButton = findViewById(R.id.btn_play);
@@ -410,7 +419,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
         //тут отправляем сообщение на сервер
         if (!wasOnPrepare) {
             duration = mediaPlayer.getDuration();
-            writeAndReadServer("hcode = " + UUID.randomUUID().toString() + "/" + duration);
+            writeAndReadServer("hcode = " + constHCode() + "/" + duration);
             //TODO - тут присваивает поле для тестов someTextMemo.setText("durat = " + duration);
         }
 
@@ -445,4 +454,20 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
 
     }
 
+    private String constHCode(){
+        SharedPreferences sPref = getPreferences(MODE_PRIVATE);
+        //если первый запуск приложения (хэш не формировался никогда)
+        if (sPref.getString(HCODE_MAP_KEY, "").isEmpty()) {
+            SharedPreferences.Editor ed = sPref.edit();
+            // кладем в корзину  SharedPreference с ключом HCODE_MAP_KEY генерируемое значение хэша
+            String hcode =  UUID.randomUUID().toString();
+            ed.putString(HCODE_MAP_KEY, hcode);
+            ed.commit();
+            return hcode;
+        }
+        else
+        {
+            return sPref.getString(HCODE_MAP_KEY, "");
+        }
+    }
 }
