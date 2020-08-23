@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     int deltaTime;
     int MAXNUMOFITERATION = 1;
     int currentNumberOfIteration;
-    double VERSION = 0.007;
+    double VERSION = 0.008;
     public static Uri myUri;
     public final String HCODE_MAP_KEY = "App_hash";
     private int clNum;
