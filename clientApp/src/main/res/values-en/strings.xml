@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">D&amp;W player</string>
-    <string name="select_audio_file_title">Select a music file</string>
-    <string name="text1">Fill in the field below and press the button</string>
-    <string name="sesid_text">Fill in if necessary</string>
-</resources>

@@ -47,6 +47,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     public Handler handler;
     TextView versionTextMemo;
     TextView someTextMemo;
+    TextView clientNumber;
     Button playButton;
     Button pauseButton;
     ProgressBar progressBar;
@@ -67,9 +68,10 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
     int deltaTime;
     int MAXNUMOFITERATION = 1;
     int currentNumberOfIteration;
-    double VERSION = 0.006;
+    double VERSION = 0.007;
     public static Uri myUri;
     public final String HCODE_MAP_KEY = "App_hash";
+    private int clNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
         versionTextMemo.setText("vers. " + VERSION);
         someTextMemo = findViewById(R.id.someTextTV);
         someTextMemo.setText("");
+        clientNumber = findViewById(R.id.client_num);
         playButton = findViewById(R.id.btn_play);
         lastMessage = findViewById(R.id.lastMessageTV);
         playButton.setBackgroundResource(android.R.drawable.ic_media_play);
@@ -180,8 +183,9 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
 //                textViewFromHandler.setText(s);
 
                 switch (strFromServer.substring(0, strFromServer.lastIndexOf("/"))) {
-                    case "num":
-
+                    case "clNum":
+                        clNum = Integer.parseInt(strFromServer.substring(strFromServer.lastIndexOf("/") + 1));
+                        clientNumber.setText(getResources().getString(R.string.client_number) + " " + clNum);
                         break;
                     case "curtime":
 //                       playCircle(strFromServer);
@@ -318,7 +322,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
 
     private void playCycle() {
         previousTime = System.currentTimeMillis();
-        writeAndReadServer("Start = " + duration);
+        writeAndReadServer("Start = " + clNum + "/" + duration);
     }
 
 
@@ -420,7 +424,7 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
         if (!wasOnPrepare) {
             duration = mediaPlayer.getDuration();
             writeAndReadServer("hcode = " + constHCode() + "/" + duration);
-            //TODO - тут присваивает поле для тестов someTextMemo.setText("durat = " + duration);
+            //не отправляем короткий номер на сервер, т.к. он еще не сформирован
         }
 
         Log.e("Длина трека", duration + "");
@@ -429,14 +433,6 @@ public class MainActivity extends Activity implements MediaPlayer.OnPreparedList
         wasOnPrepare = true;
 //        mediaPlayer.stop();
 
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     @Override

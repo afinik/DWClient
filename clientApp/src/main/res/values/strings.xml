@@ -4,4 +4,5 @@
     <string name="select_audio_file_title">Select a music file</string>
     <string name="text1">Fill in the field below and press the button</string>
     <string name="sesid_text">Fill in if necessary</string>
+    <string name="client_number">Client number is</string>
 </resources>
